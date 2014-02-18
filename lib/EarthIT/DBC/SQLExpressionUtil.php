@@ -9,7 +9,8 @@ class EarthIT_DBC_SQLExpressionUtil
 	public static function flatten( EarthIT_DBC_SQLExpression $exp, &$counter ) {
 		$sql = $exp->getTemplate();
 		$paramValues = array();
-		
+		$replacements = array();
+
 		foreach( $exp->getParamValues() as $k => $v ) {
 			if( is_scalar($v) || $v === null || $v instanceof EarthIT_DBC_SQLIdentifier ) {
 				$paramValues[$k] = $v;
@@ -22,18 +23,18 @@ class EarthIT_DBC_SQLExpressionUtil
 					$placeholders[] = "{".$ph."}";
 					++$counter;
 				}
-				$sql = strtr($sql, "{".$k."}", "(".implode(', ',$placeholders).")");
+				$replacements["{".$k."}"] = "(".implode(', ',$placeholders).")";
 			} else if( $v instanceof EarthIT_DBC_SQLExpression ) {
 				$flattened = self::flatten( $v, $counter );
-				$sql = strtr($sql, "{".$k."}", $flattened->getTemplate());
-				foreach( $flattened->getParamValues() as $k=>$v ) {
-					$paramValues[$k] = $v;
+				$replacements["{".$k."}"] = $flattened->getTemplate();
+				foreach( $flattened->getParamValues() as $subKey=>$subValue ) {
+					$paramValues[$subKey] = $subValue;
 				}
 			} else {
 				throw new Exception("Don't know how to incorporate ".$v." into query.");
 			}
 		}
 		
-		return new EarthIT_DBC_BaseSQLExpression($sql, $paramValues);
+		return new EarthIT_DBC_BaseSQLExpression(strtr($sql, $replacements), $paramValues);
 	}
 }
