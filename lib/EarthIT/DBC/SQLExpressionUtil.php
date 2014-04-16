@@ -2,6 +2,14 @@
 
 class EarthIT_DBC_SQLExpressionUtil
 {
+	public static function newParamName() {
+		static $prefixPrefix;
+		static $nextPrefixNumber;
+		if( $prefixPrefix === null ) $prefixPrefix = 'seup'.mt_rand(100000000,999999999);
+		if( $nextPrefixNumber === null ) $nextPrefixNumber = 1;
+		return $prefixPrefix.($nextPrefixNumber++);
+	}
+	
 	/**
 	 * Transform an SQLExpression so that all parameter values
 	 * are scalars, null, or SQLIdentifiers.
