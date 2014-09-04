@@ -21,13 +21,18 @@ class EarthIT_DBC_DoctrineStatementBuilder
 				$quotedParams["{".$k."}"] = $this->conn->quoteIdentifier($v->getIdentifier());
 			} else if( $v === null ) {
 				$quotedParams["{".$k."}"] = 'NULL';
+			} else if( $v === true ) {
+				$quotedParams["{".$k."}"] = 'true';
+			} else if( $v === false ) {
+				$quotedParams["{".$k."}"] = 'false';
+			} else if( is_integer($v) or is_float($v) ) {
+				$quotedParams["{".$k."}"] = (string)$v;
 			} else {
 				$quotedParams["{".$k."}"] = $this->conn->quote($v);
 			}
 		}
 		
 		$fullSql = strtr( $flattened->getTemplate(), $quotedParams );
-		
 		$stmt = $this->conn->prepare($fullSql);
 		return $stmt;
 	}
