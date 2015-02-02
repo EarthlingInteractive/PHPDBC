@@ -16,6 +16,12 @@ class EarthIT_DBC_DoctrineSQLRunner implements EarthIT_DBC_SQLRunner
 		$this->conn->exec($sql);
 	}
 	
+	public function doQuery( $sql, array $params=array() ) {
+		$stb = new EarthIT_DBC_DoctrineStatementBuilder($this->conn);
+		$stmt = $stb->makeStatement($sql, $params);
+		$stmt->execute();
+	}
+	
 	public function fetchRows( $sql, array $params=array() ) {
 		$stb = new EarthIT_DBC_DoctrineStatementBuilder($this->conn);
 		$stmt = $stb->makeStatement($sql, $params);
