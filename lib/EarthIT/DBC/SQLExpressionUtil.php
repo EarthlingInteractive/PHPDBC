@@ -45,4 +45,58 @@ class EarthIT_DBC_SQLExpressionUtil
 		
 		return new EarthIT_DBC_BaseSQLExpression(strtr($sql, $replacements), $paramValues);
 	}
+	
+	/**
+	 * @param $exp The expression to encode
+	 * @param $quoter any object that can quote(string):string and quoteIdentifier(string):string
+	 * @return string SQL with all placeholder substituted with quoted parameter values
+	 */
+	public static function queryToSql( EarthIT_DBC_SQLExpression $exp, $quoter ) {
+		$counter = 0;
+		$flattened = self::flatten( $exp, $counter );
+		
+		// I can't figure a way to bind database identifiers.
+		// Therefore doing own quoting.
+		
+		$quotedParams = array();
+
+		foreach( $flattened->getParamValues() as $k=>$v ) {
+			if( $v instanceof EarthIT_DBC_SQLIdentifier ) {
+				$quotedParams["{".$k."}"] = $quoter->quoteIdentifier($v->getIdentifier());
+			} else if( $v === null ) {
+				$quotedParams["{".$k."}"] = 'NULL';
+			} else if( $v === true ) {
+				$quotedParams["{".$k."}"] = 'true';
+			} else if( $v === false ) {
+				$quotedParams["{".$k."}"] = 'false';
+			} else if( is_integer($v) or is_float($v) ) {
+				$quotedParams["{".$k."}"] = (string)$v;
+			} else {
+				$quotedParams["{".$k."}"] = $quoter->quote($v);
+			}
+		}
+		
+		return strtr( $flattened->getTemplate(), $quotedParams );
+	}
+	
+	protected static function describeType( $thing ) {
+		if( $thing === null ) return 'null';
+		if( $thing === true ) return 'true';
+		if( $thing === false ) return 'false';
+		if( is_object($thing) ) return 'a '.get_class($thing);
+		return 'a '.gettype($thing);
+	}
+	
+	public static function expression($e, array $params=array() ) {
+		if( $e instanceof EarthIT_DBC_SQLExpression ) {
+			if( count($params) > 0 ) {
+				throw new Exception("Doesn't make sense to include parameters with a SQLExpression object.");
+			}
+			return $e;
+		} else if( is_string($e) ) {
+			return new EarthIT_DBC_BaseSQLExpression($e, $params);
+		} else {
+			throw new Exception("Expected string (of SQL) or EarthIT_DBC_SQLExpression; got ".self::describeType($e));
+		}
+	}
 }
