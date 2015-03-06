@@ -99,4 +99,23 @@ class EarthIT_DBC_SQLExpressionUtil
 			throw new Exception("Expected string (of SQL) or EarthIT_DBC_SQLExpression; got ".self::describeType($e));
 		}
 	}
+	
+	/**
+	 * Return an EarthIT_DBC_SQLExpression that identifies the table.
+	 */
+	public static function tableExpression(
+		EarthIT_Schema_ResourceClass $rc,
+		EarthIT_DBC_Namer $namer,
+		$prefix=array()
+	) {
+		$components = array();
+		foreach( $prefix as $p ) {
+			$components[] = new EarthIT_DBC_SQLIdentifier($p);
+		}
+		foreach( $rc->getDbNamespacePath() as $ns ) {
+			$components[] = new EarthIT_DBC_SQLIdentifier($ns);
+		}
+		$components[] = new EarthIT_DBC_SQLIdentifier($namer->getTableName($rc));
+		return new EarthIT_DBC_SQLNamespacePath($components);
+	}
 }
