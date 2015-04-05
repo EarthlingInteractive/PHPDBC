@@ -26,4 +26,43 @@ class EarthIT_DBC_SQLExpressionUtilTest extends PHPUnit_Framework_TestCase
 	public function testOuterNamespaceeTableExpression() {
 		$this->_testTableExpression('"xyz"."abc"."qqx"."hoobawooba"', array('xyz','abc'), array('qqx'), 'hooba wooba');
 	}
+	
+	//// Test boring utility functions
+	
+	public function testExpressionToExpression() {
+		$exp = new EarthIT_DBC_BaseSQLExpression("SELECT {thing}", array('thing'=>42));
+		$this->assertSame($exp, EarthIT_DBC_SQLExpressionUtil::expression($exp));
+	}
+	public function testExpressionToExpressionWithParameters() {
+		$exp = new EarthIT_DBC_BaseSQLExpression("SELECT {thing}", array('thing'=>42));
+		try {
+			EarthIT_DBC_SQLExpressionUtil::expression($exp, array('thing'=>43));
+			$this->fail("expression(SQLExpression, non-empty-array) should have errored.");
+		} catch( Exception $e ) {}
+	}
+	public function testExpressionToTemplateAndParamValues() {
+		$exp = new EarthIT_DBC_BaseSQLExpression("SELECT {thing}", array('thing'=>42));
+		list($template, $params) = EarthIT_DBC_SQLExpressionUtil::templateAndParamValues($exp);
+		$this->assertSame($exp->getTemplate(), $template);
+		$this->assertSame($exp->getParamValues(), $params);
+	}
+	public function testExpressionToTemplateAndParamValuesWithParameters() {
+		$exp = new EarthIT_DBC_BaseSQLExpression("SELECT {thing}", array('thing'=>42));
+		try {
+			EarthIT_DBC_SQLExpressionUtil::templateAndParamValues($exp, array('thing'=>43));
+			$this->fail("templateAndParamValues(SQLExpression, non-empty-array) should have errored.");
+		} catch( Exception $e ) {}
+	}
+	
+	public function testTemplateAndParamValuesToExpression() {
+		list($template,$params) = array("SELECT {thing}", array('thing'=>42));
+		$exp = new EarthIT_DBC_BaseSQLExpression($template,$params);
+		$this->assertEquals($exp, EarthIT_DBC_SQLExpressionUtil::expression($template, $params));
+	}
+	public function testTemplateAndParamValuesToTemplateAndParamValues() {
+		list($template,$params) = array("SELECT {thing}", array('thing'=>42));
+		list($templateB,$paramsB) = EarthIT_DBC_SQLExpressionUtil::templateAndParamValues($template, $params);
+		$this->assertSame($template, $templateB);
+		$this->assertSame($params, $paramsB);
+	}
 }

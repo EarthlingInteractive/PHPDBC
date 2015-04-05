@@ -87,10 +87,26 @@ class EarthIT_DBC_SQLExpressionUtil
 		return 'a '.gettype($thing);
 	}
 	
+	//// Handy functions for normalizing parameters
+	//// that might be either (SQL string, parameters) or (SQLExpression, [])
+	
+	public static function templateAndParamValues($e, array $params=array()) {
+		if( $e instanceof EarthIT_DBC_SQLExpression ) {
+			if( count($params) > 0 ) {
+				throw new Exception("Doesn't make sense to provide both an SQLExpression object and parameters.");
+			}
+			return array($e->getTemplate(), $e->getParamValues());
+		} else if( is_string($e) ) {
+			return array($e, $params);
+		} else {
+			throw new Exception("Expected string (of SQL) or EarthIT_DBC_SQLExpression; got ".self::describeType($e));
+		}
+	}
+	
 	public static function expression($e, array $params=array() ) {
 		if( $e instanceof EarthIT_DBC_SQLExpression ) {
 			if( count($params) > 0 ) {
-				throw new Exception("Doesn't make sense to include parameters with a SQLExpression object.");
+				throw new Exception("Doesn't make sense to provide both an SQLExpression object and parameters.");
 			}
 			return $e;
 		} else if( is_string($e) ) {
