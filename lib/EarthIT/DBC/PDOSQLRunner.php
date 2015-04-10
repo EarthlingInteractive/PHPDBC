@@ -4,7 +4,7 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 {
 	protected $quoter;
 	
-	public function __construct( $conn, callable $identifierQuoteFunction ) {
+	public function __construct( PDO $conn, callable $identifierQuoteFunction ) {
 		$this->conn = $conn;
 		$this->quoter = new EarthIT_DBC_CustomQuoter(array($conn,'quote'), $identifierQuoteFunction);
 	}
