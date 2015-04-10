@@ -12,9 +12,11 @@ class EarthIT_DBC_CustomQuoterTest extends PHPUnit_Framework_TestCase
 			EarthIT_DBC_SQLExpressionUtil::queryToSql(
 				EarthIT_DBC_SQLExpressionUtil::expression(
 					"SELECT {col} FROM {tab} WHERE {tab}.foo = {v}",
-					['col' => new EarthIT_DBC_SQLIdentifier('joe'),
-					 'tab' => new EarthIT_DBC_SQLIdentifier('blow'),
-					 'v' => 'seven']),
+					array(
+						'col' => new EarthIT_DBC_SQLIdentifier('joe'),
+						'tab' => new EarthIT_DBC_SQLIdentifier('blow'),
+						'v' => 'seven'
+					)),
 				$quoter));
 	}
 }
