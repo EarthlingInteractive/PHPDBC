@@ -36,4 +36,13 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 		$stmt = $this->conn->prepare($sql);
 		$stmt->execute($params);
 	}
+
+	/**
+	 * Handy for debugging!
+	 * @unstable
+	 */
+	public function quoteParams( $sql, array $params ) {
+		$exp = EarthIT_DBC_SQLExpressionUtil::expression($sql,$params);
+		return EarthIT_DBC_SQLExpressionUtil::queryToSql($exp,$this->quoter);
+	}
 }
