@@ -4,9 +4,20 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 {
 	protected $quoter;
 	
-	public function __construct( PDO $conn, callable $identifierQuoteFunction ) {
+	/**
+	 * @param PDO $conn the PDO connection
+	 * @param mixed $quoter
+	 */
+	public function __construct( PDO $conn, $quoter ) {
 		$this->conn = $conn;
-		$this->quoter = new EarthIT_DBC_CustomQuoter(array($conn,'quote'), $identifierQuoteFunction);
+		if( method_exists($quoter,'quote') ) {
+			$this->quoter = $quoter;
+		} else if( is_callable($quoter) ) {
+			// For 1.0.0 compatibility.  Probably not useful or used by anyone.
+			$this->quoter = new EarthIT_DBC_CustomQuoter(array($conn,'quote'), $quoter);
+		} else {
+			throw new Exception("\$quoter must implement #quote or be callable.");
+		}
 	}
 	
 	public function doRawQuery( $sql ) {

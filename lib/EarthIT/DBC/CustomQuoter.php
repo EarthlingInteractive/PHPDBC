@@ -3,7 +3,7 @@
 /**
  * Uses specified functions for quoting values and identifiers
  */
-class EarthIT_DBC_CustomQuoter
+class EarthIT_DBC_CustomQuoter implements EarthIT_DBC_Quoter
 {
 	protected $valueQuoter;
 	protected $identifierQuoter;

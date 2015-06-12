@@ -63,14 +63,6 @@ class EarthIT_DBC_SQLExpressionUtil
 		foreach( $flattened->getParamValues() as $k=>$v ) {
 			if( $v instanceof EarthIT_DBC_SQLIdentifier ) {
 				$quotedParams["{".$k."}"] = $quoter->quoteIdentifier($v->getIdentifier());
-			} else if( $v === null ) {
-				$quotedParams["{".$k."}"] = 'NULL';
-			} else if( $v === true ) {
-				$quotedParams["{".$k."}"] = 'true';
-			} else if( $v === false ) {
-				$quotedParams["{".$k."}"] = 'false';
-			} else if( is_integer($v) or is_float($v) ) {
-				$quotedParams["{".$k."}"] = (string)$v;
 			} else {
 				$quotedParams["{".$k."}"] = $quoter->quote($v);
 			}
