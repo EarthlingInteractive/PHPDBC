@@ -28,6 +28,8 @@ class EarthIT_DBC_MSSQLQuoter implements EarthIT_DBC_Quoter
 			return (string)$v;
 		} else if( is_string($v) ) {
 			return call_user_func($this->stringQuoteFunction, $v);
+		} else {
+			throw new Exception(get_class($this)." doesn't know how to quote ".var_export($v,true));
 		}
 	}
 	
