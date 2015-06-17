@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Uses specified functions for quoting values and identifiers
- */
-class EarthIT_DBC_DoctrineQuoter implements EarthIT_DBC_Quoter
+class EarthIT_DBC_DoctrinePostgresQuoter implements EarthIT_DBC_Quoter
 {
 	protected $conn;
 	

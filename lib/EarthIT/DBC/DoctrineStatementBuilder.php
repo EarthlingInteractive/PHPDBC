@@ -5,9 +5,12 @@ class EarthIT_DBC_DoctrineStatementBuilder
 	protected $conn;
 	protected $quoter;
 	
-	public function __construct( $conn ) {
+	public function __construct( $conn, $quoter=null ) {
 		$this->conn = $conn;
-		$this->quoter = new EarthIT_DBC_DoctrineQuoter($this->conn);
+		if( $quoter === null ) {
+			$quoter = new EarthIT_DBC_DoctrinePostgresQuoter($this->conn);
+		}
+		$this->quoter = $quoter;
 	}
 	
 	public function expressionToSql( EarthIT_DBC_SQLExpression $exp ) {
