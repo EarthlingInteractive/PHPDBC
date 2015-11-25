@@ -32,5 +32,14 @@ class EarthIT_DBC_DoctrineSQLRunner implements EarthIT_DBC_SQLRunner
 		$stmt = $stb->makeStatement($sql, $params);
 		$stmt->execute();
 		return $stmt->fetchAll();
-	}	
+	}
+	
+	/**
+	 * Handy for debugging!
+	 * @unstable
+	 */
+	public function quoteParams( $sql, array $params ) {
+		$exp = EarthIT_DBC_SQLExpressionUtil::expression($sql,$params);
+		return EarthIT_DBC_SQLExpressionUtil::queryToSql($exp,$this->quoter);
+	}
 }
