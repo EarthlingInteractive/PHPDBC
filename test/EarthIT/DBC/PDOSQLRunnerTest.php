@@ -3,7 +3,7 @@
 class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 {
 	public function testMakeAPostgresOne() {
-		$PDO = $this->registry->pdo;
+		$PDO = $this->registry->postgresPdo;
 		$runner = EarthIT_DBC_PDOSQLRunner::make($PDO);
 		$quoted = $runner->quoteParams(
 			'SELECT {col} FROM {tab} WHERE {var} < {val}',
@@ -20,7 +20,7 @@ class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 	}
 	
 	public function testSelect() {
-		$PDO = $this->registry->pdo;
+		$PDO = $this->registry->postgresPdo;
 		$runner = EarthIT_DBC_PDOSQLRunner::make($PDO);
 		$rows = $runner->fetchRows(
 			"SELECT {val1} AS {key} UNION SELECT {val2} AS {key}",

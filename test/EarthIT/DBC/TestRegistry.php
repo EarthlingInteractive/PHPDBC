@@ -40,14 +40,14 @@ class EarthIT_DBC_TestRegistry
 		return $v;
 	}
 	
-	protected function figureSqlSrvDsn( array $config ) {
+	protected function figurePostgresDsn( array $config ) {
 		$portStr = isset($config['port']) ? ';port='.$config['port'] : '';
 		return "pgsql:host={$config['host']}{$portStr};dbname={$config['dbname']}";
 	}
 	
-	public function loadPdo() {
+	public function loadPostgresPdo() {
 		$config = $this->requireConfig('dbc');
-		$dsn = $this->figureSqlSrvDsn($config);
+		$dsn = $this->figurePostgresDsn($config);
 		$pdo = new PDO(
 			$dsn,
 			$config['user'], $config['password'],
