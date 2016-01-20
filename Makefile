@@ -35,4 +35,4 @@ drop-database: %: test/db-scripts/%.sql
 	cat '$<' | sudo -u postgres psql -v ON_ERROR_STOP=1
 
 run-unit-tests: test-dependencies
-	phpunit --bootstrap test/phpunit-bootstrap.php test
+	vendor/bin/phpunit --bootstrap test/phpunit-bootstrap.php test
