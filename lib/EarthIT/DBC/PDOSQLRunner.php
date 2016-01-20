@@ -4,6 +4,25 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 {
 	protected $quoter;
 	
+	protected static function getOpt(array $options, $k, $default=null) {
+		return isset($options[$k]) ? $options[$k] : $default;
+	}
+	
+	public static function makeQuoter( PDO $conn, array $options=array() ) {
+		return new EarthIT_DBC_CustomQuoter(
+			array($conn,'quote'),
+			new EarthIT_DBC_SimpleQuoteFunction(
+				self::getOpt($options, 'identifierOpenQuote', '"'),
+				self::getOpt($options, 'identifierCloseQuote', '"'),
+				self::getOpt($options, 'identifierRegex')
+			)
+		);
+	}
+
+	public static function make( PDO $conn, array $options=array() ) {
+		return new self( $conn, self::makeQuoter($conn, $options) );
+	}
+	
 	/**
 	 * @param PDO $conn the PDO connection
 	 * @param mixed $quoter

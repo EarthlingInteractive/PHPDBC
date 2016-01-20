@@ -1,2 +1,4 @@
 composer.lock
+test/db-scripts
+test/dbc.json
 vendor

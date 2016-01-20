@@ -6,11 +6,13 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^3.7",
+		"earthit/php-common": "^1.1.1",
+		"earthit/php-project-utils": "^0.0.12",
 		"earthit/schema": "^1.0.1"
 	},
 	"autoload": {
 		"psr-0": {
-			"EarthIT_DBC_": "lib/"
+			"EarthIT_DBC_": ["lib/", "test/"]
 		}
 	}
 }

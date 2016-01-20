@@ -1,0 +1,8 @@
+{
+    "dbname": "phpdbctest",
+    "host": "localhost",
+    "user": "phpdbctest",
+    "password": "phpdbctest",
+    "driver": "pdo_pgsql",
+    "charset": "UTF-8"
+}
