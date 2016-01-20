@@ -8,6 +8,13 @@ php:
   - hhvm
   - nightly
 
+addons:
+  postgresql: "9.3"
+
+before_script:
+  - make test/db-scripts/create-database.sql
+  - psql -U postgres -v ON_ERROR_STOP=1 <test/db-scripts/create-database.sql
+
 install: make test-dependencies
 
 script: make run-unit-tests
