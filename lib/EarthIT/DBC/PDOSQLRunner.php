@@ -51,7 +51,7 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 		 * - PDO doesn't know how to quote identifiers
 		 */
 		$sql = EarthIT_DBC_SQLExpressionUtil::queryToSql($exp,$this->quoter);
-		$params = [];
+		$params = array();
 	}
 	
 	public function fetchRows( $sql, array $params=array() ) {
