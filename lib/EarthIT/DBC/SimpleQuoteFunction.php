@@ -19,7 +19,7 @@ class EarthIT_DBC_SimpleQuoteFunction
 		if( preg_match('#'.$this->contentRegex.'#', $content) ) {
 			return $this->openQuote.$content.$this->closeQuote;
 		} else {
-			throw new Exception("Refusing to quote '$content' because it does not match the regex '$contentRegex'");
+			throw new Exception("Refusing to quote '$content' because it does not match the regex '{$this->contentRegex}'");
 		}
 	}
 }
