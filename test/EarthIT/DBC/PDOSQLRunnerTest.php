@@ -2,9 +2,19 @@
 
 class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 {
+	protected function makePostgresSqlRunner() {
+		if( !in_array('pgsql',PDO::getAvailableDrivers()) ) {
+			$this->markTestSkipped("pgsql PDO driver not available");
+			return null;
+		}
+		$PDO = $this->registry->postgresPdo;
+		return EarthIT_DBC_PDOSQLRunner::make($PDO);
+	}
+	
 	public function testMakeAPostgresOne() {
 		$PDO = $this->registry->postgresPdo;
 		$runner = EarthIT_DBC_PDOSQLRunner::make($PDO);
+		if( $runner === null ) return;
 		$quoted = $runner->quoteParams(
 			'SELECT {col} FROM {tab} WHERE {var} < {val}',
 			array(
@@ -20,8 +30,8 @@ class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 	}
 	
 	public function testSelect() {
-		$PDO = $this->registry->postgresPdo;
-		$runner = EarthIT_DBC_PDOSQLRunner::make($PDO);
+		$runner = $this->makePostgresSqlRunner();
+		if( $runner === null ) return;
 		$rows = $runner->fetchRows(
 			"SELECT {val1} AS {key} UNION SELECT {val2} AS {key}",
 			array(
