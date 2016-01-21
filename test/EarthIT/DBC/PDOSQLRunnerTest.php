@@ -12,8 +12,7 @@ class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 	}
 	
 	public function testMakeAPostgresOne() {
-		$PDO = $this->registry->postgresPdo;
-		$runner = EarthIT_DBC_PDOSQLRunner::make($PDO);
+		$runner = $this->makePostgresSqlRunner();
 		if( $runner === null ) return;
 		$quoted = $runner->quoteParams(
 			'SELECT {col} FROM {tab} WHERE {var} < {val}',
