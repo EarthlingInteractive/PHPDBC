@@ -95,6 +95,19 @@ class EarthIT_DBC_SQLExpressionUtil
 		}
 	}
 	
+	public static function identifier($id) {
+		if( is_array($id) ) {
+			if( count($id) == 0 ) throw new Exception("Can't make a zero-length path!");
+			if( count($id) == 1 ) foreach($id as $comp) return self::identifier($comp);
+			
+			$components = array();
+			foreach( $id as $comp ) $components[] = self::identifier($comp);
+			return new EarthIT_DBC_SQLNamespacePath($components);
+		} else {
+			return new EarthIT_DBC_SQLIdentifier($id);
+		}
+	}
+	
 	public static function expression($e, array $params=array() ) {
 		if( $e instanceof EarthIT_DBC_SQLExpression ) {
 			if( count($params) > 0 ) {
