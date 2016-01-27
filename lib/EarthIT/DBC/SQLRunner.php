@@ -1,8 +1,7 @@
 <?php
 
-interface EarthIT_DBC_SQLRunner
+interface EarthIT_DBC_SQLRunner extends EarthIT_DBC_RawSQLRunner
 {
-	public function doRawQuery( $sql );
 	public function doQuery( $sql, array $params=array() );
 	/**
 	 * @param string $sql SQL with embedded {variables}
