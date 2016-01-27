@@ -71,6 +71,12 @@ class EarthIT_DBC_SQLExpressionUtil
 		return strtr( $flattened->getTemplate(), $quotedParams );
 	}
 	
+	public static function debugSql( $sql, array $params=array() ) {
+		return self::queryToSql(
+			self::expression($sql, $params),
+			EarthIT_DBC_DebugSQLQuoter::getInstance());
+	}
+	
 	protected static function describeType( $thing ) {
 		if( $thing === null ) return 'null';
 		if( $thing === true ) return 'true';
