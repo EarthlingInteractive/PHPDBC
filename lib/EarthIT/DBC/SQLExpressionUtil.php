@@ -14,7 +14,11 @@ class EarthIT_DBC_SQLExpressionUtil
 	 * Transform an SQLExpression so that all parameter values
 	 * are scalars, null, or SQLIdentifiers.
 	 */
-	public static function flatten( EarthIT_DBC_SQLExpression $exp, &$counter ) {
+	public static function flatten( EarthIT_DBC_SQLQueryComponent $exp, &$counter ) {
+		if( $exp instanceof EarthIT_DBC_SQLIdentifier ) {
+			return new EarthIT_DBC_BaseSQLExpression("{identifier}", array('identifier'=>$exp));
+		}
+		
 		$sql = $exp->getTemplate();
 		$paramValues = array();
 		$replacements = array();
@@ -51,7 +55,7 @@ class EarthIT_DBC_SQLExpressionUtil
 	 * @param $quoter any object that can quote(string):string and quoteIdentifier(string):string
 	 * @return string SQL with all placeholder substituted with quoted parameter values
 	 */
-	public static function queryToSql( EarthIT_DBC_SQLExpression $exp, $quoter ) {
+	public static function queryToSql( EarthIT_DBC_SQLQueryComponent $exp, $quoter ) {
 		$counter = 0;
 		$flattened = self::flatten( $exp, $counter );
 		
@@ -89,16 +93,20 @@ class EarthIT_DBC_SQLExpressionUtil
 	//// that might be either (SQL string, parameters) or (SQLExpression, [])
 	
 	public static function templateAndParamValues($e, array $params=array()) {
-		if( $e instanceof EarthIT_DBC_SQLExpression ) {
+		if( $e instanceof EarthIT_DBC_SQLQueryComponent ) {
 			if( count($params) > 0 ) {
-				throw new Exception("Doesn't make sense to provide both an SQLExpression object and parameters.");
+				throw new Exception("Doesn't make sense to provide both an SQLQueryComponent object and parameters.");
 			}
-			return array($e->getTemplate(), $e->getParamValues());
+			if( $e instanceof EarthIT_DBC_SQLIdentifier ) {
+				return array("{identifier}", 'identifier'=>$exp);
+			} else if( $e instanceof EarthIT_DBC_SQLExpression ) {
+				return array($e->getTemplate(), $e->getParamValues());
+			}
 		} else if( is_string($e) ) {
 			return array($e, $params);
-		} else {
-			throw new Exception("Expected string (of SQL) or EarthIT_DBC_SQLExpression; got ".self::describeType($e));
 		}
+		
+		throw new Exception("Expected string (of SQL), EarthIT_DBC_SQLExpression, or EarthIT_DBC_SQLIdentifier; got ".self::describeType($e));
 	}
 	
 	public static function identifier($id) {
@@ -115,7 +123,7 @@ class EarthIT_DBC_SQLExpressionUtil
 	}
 	
 	public static function expression($e, array $params=array() ) {
-		if( $e instanceof EarthIT_DBC_SQLExpression ) {
+		if( $e instanceof EarthIT_DBC_SQLQueryComponent ) {
 			if( count($params) > 0 ) {
 				throw new Exception("Doesn't make sense to provide both an SQLExpression object and parameters.");
 			}
@@ -135,14 +143,10 @@ class EarthIT_DBC_SQLExpressionUtil
 		EarthIT_DBC_Namer $namer,
 		$prefix=array()
 	) {
-		$components = array();
-		foreach( $prefix as $p ) {
-			$components[] = new EarthIT_DBC_SQLIdentifier($p);
-		}
-		foreach( $rc->getDbNamespacePath() as $ns ) {
-			$components[] = new EarthIT_DBC_SQLIdentifier($ns);
-		}
-		$components[] = new EarthIT_DBC_SQLIdentifier($namer->getTableName($rc));
-		return new EarthIT_DBC_SQLNamespacePath($components);
+		$nameParts = array();
+		foreach( $prefix as $p ) $nameParts[] = $p;
+		foreach( $rc->getDbNamespacePath() as $ns ) $nameParts[] = $ns;
+		$nameParts[] = $namer->getTableName($rc);
+		return self::identifier($nameParts, true);
 	}
 }

@@ -2,9 +2,8 @@
 
 class EarthIT_DBC_SQLExpressionUtilTest extends PHPUnit_Framework_TestCase
 {
-	protected function assertSqlEquals($expected, EarthIT_DBC_SQLExpression $expression) {
-		$this->assertEquals($expected, EarthIT_DBC_SQLExpressionUtil::queryToSql(
-			$expression, EarthIT_DBC_DebugSQLQuoter::getInstance()));
+	protected function assertSqlEquals($expected, EarthIT_DBC_SQLQueryComponent $expression) {
+		$this->assertEquals($expected, EarthIT_DBC_SQLExpressionUtil::debugSql($expression));
 	}
 	
 	protected function _testTableExpression($expectedSql, $outerPrefix, $innerPrefix, $rcName) {
