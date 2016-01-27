@@ -1,6 +1,6 @@
 <?php
 
-class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
+class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQLRunner2
 {
 	protected $quoter;
 	
@@ -74,5 +74,28 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner
 	public function quoteParams( $sql, array $params ) {
 		$exp = EarthIT_DBC_SQLExpressionUtil::expression($sql,$params);
 		return EarthIT_DBC_SQLExpressionUtil::queryToSql($exp,$this->quoter);
+	}
+	
+	public function doQuery2( EarthIT_DBC_SQLExpression $exp, $type=self::ST_SELECT, array $options=array() ) {
+		$sql = $exp->getTemplate();
+		$params = $exp->getParamValues();
+		$this->rewriteForPdo($sql, $params);
+		$stmt = $this->conn->prepare($sql);
+		$stmt->execute($params);
+		
+		switch( $type ) {
+		case self::ST_GENERIC:
+			return new EarthIT_DBC_BaseSQLResult( array(), null, null );
+		case self::ST_SELECT:
+			return new EarthIT_DBC_BaseSQLResult( $stmt->fetchAll(), $stmt->rowCount(), null );
+		case self::ST_INSERT:
+			return new EarthIT_DBC_BaseSQLResult( array(), $stmt->rowCount(), $this->conn->lastInsertId() );
+		case self::ST_UPDATE:
+			return new EarthIT_DBC_BaseSQLResult( array(), $stmt->rowCount(), null );
+		case self::ST_DELETE:
+			return new EarthIT_DBC_BaseSQLResult( array(), $stmt->rowCount(), null );
+		default:
+			throw new Exception("Unsupported query type: '$type'");
+		}
 	}
 }

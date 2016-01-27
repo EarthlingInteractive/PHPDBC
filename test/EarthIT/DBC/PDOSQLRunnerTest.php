@@ -43,4 +43,27 @@ class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 		$this->assertEquals( 'aabb', $rows[0]['thing'] );
 		$this->assertEquals( 'bbcc', $rows[1]['thing'] );
 	}
+	
+	protected function doBobQuery() {
+		$runner = $this->makePostgresSqlRunner();
+		$q = EarthIT_DBC_SQLExpressionUtil::expression("SELECT {val} AS {name}", array(
+			'val' => 23,
+			'name' => EarthIT_DBC_SQLExpressionUtil::identifier('bob')
+		));
+		return $runner->doQuery2($q);
+	}
+	
+	public function testSelect2() {
+		$rowCount = 0;
+		foreach( $this->doBobQuery() as $r ) {
+			$this->assertEquals(23, $r['bob']);
+			++$rowCount;
+		}
+		$this->assertEquals(1, $rowCount);
+	}
+	
+	public function testSelect2b() {
+		$roze = $this->doBobQuery()->getRows();
+		$this->assertEquals( array(array('bob'=>23)), $roze );
+	}
 }
