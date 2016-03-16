@@ -8,9 +8,12 @@ class EarthIT_DBC_PDOSQLRunner implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQL
 		return isset($options[$k]) ? $options[$k] : $default;
 	}
 	
+	// TODO: Allow $options to indicate true, false, null literals.
+	// e.g. for old versions of MSSQL which don't know about 'TRUE' and 'FALSE'
+	
 	public static function makeQuoter( PDO $conn, array $options=array() ) {
 		return new EarthIT_DBC_CustomQuoter(
-			array($conn,'quote'),
+			new EarthIT_DBC_SpecialValueQuoteFunction(array($conn,'quote')),
 			new EarthIT_DBC_SimpleQuoteFunction(
 				self::getOpt($options, 'identifierOpenQuote', '"'),
 				self::getOpt($options, 'identifierCloseQuote', '"'),

@@ -15,16 +15,17 @@ class EarthIT_DBC_PDOSQLRunnerTest extends EarthIT_DBC_TestCase
 		$runner = $this->makePostgresSqlRunner();
 		if( $runner === null ) return;
 		$quoted = $runner->quoteParams(
-			'SELECT {col} FROM {tab} WHERE {var} < {val}',
+			'SELECT {col} FROM {tab} WHERE {var} < {val} AND {null} IS NULL',
 			array(
 				'col' => new EarthIT_DBC_SQLIdentifier('some_column'),
 				'tab' => new EarthIT_DBC_SQLIdentifier('some_table'),
 				'var' => new EarthIT_DBC_SQLIdentifier('some_other_column'),
-				'val' => 'three hundred'
+				'val' => 'three hundred',
+				'null' => null
 			)
 		);
 		$this->assertEquals(
-			'SELECT "some_column" FROM "some_table" WHERE "some_other_column" < \'three hundred\'',
+			'SELECT "some_column" FROM "some_table" WHERE "some_other_column" < \'three hundred\' AND NULL IS NULL',
 			$quoted);
 	}
 	
