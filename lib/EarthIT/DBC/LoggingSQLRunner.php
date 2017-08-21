@@ -78,10 +78,10 @@ implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQLRunner2
 		$beginTime = microtime(true);
 		try {
 			$this->backingSqlRunner->doRawQuery($sql);
-		} catch( Exception $e ) {
+		} catch( Exception $error ) {
 			$endTime = microtime(true);
 			$this->log($sql,null,$beginTime,$endTime,$error,'doRawQuery');
-			throw $e;
+			throw $error;
 		}
 		$endTime = microtime(true);
 		$this->log($sql,null,$beginTime,$endTime,null,'doRawQuery');
@@ -91,10 +91,10 @@ implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQLRunner2
 		$beginTime = microtime(true);
 		try {
 			$res = $this->backingSqlRunner->doQuery2($exp, $type, $options);
-		} catch( Exception $e ) {
+		} catch( Exception $error ) {
 			$endTime = microtime(true);
 			$this->log($sql,null,$beginTime,$endTime,$error,$type,$options);
-			throw $e;
+			throw $error;
 		}
 		$endTime = microtime(true);
 		$this->log($sql,null,$beginTime,$endTime,null,$type,$options);
