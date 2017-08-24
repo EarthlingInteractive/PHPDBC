@@ -23,13 +23,21 @@ class EarthIT_DBC_SQLRanEvent {
 	public function getDuration() {
 		return $this->endTime - $this->beginTime;
 	}
+
+	protected function getParameterizedSql() {
+		if( $this->params === null ) {
+			return $this->sql;
+		} else {
+			return EarthIT_DBC_SQLExpressionUtil::debugSql($this->sql, $this->params);
+		}
+	}
 	
 	public function __toString() {
 		return
 			"-- ".($this->methodName ? $this->methodName." " : "").
 			date('c',$this->beginTime)." to ".date('c',$this->endTime).
 			" (".($this->endTime - $this->beginTime)." seconds)\n".
-			EarthIT_DBC_SQLExpressionUtil::debugSql($this->sql, $this->params);
+			$this->getParameterizedSql();
 	}
 }
 
