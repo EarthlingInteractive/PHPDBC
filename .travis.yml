@@ -1,7 +1,9 @@
 language: php
 
+# Should work on 5.3 and maybe even 5.2,
+# but Travis errors out because it doesn't know how to test with them.
+
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
