@@ -59,10 +59,10 @@ implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQLRunner2
 		$beginTime = microtime(true);
 		try {
 			$this->backingSqlRunner->doQuery($sql, $params);
-		} catch( Exception $e ) {
+		} catch( Exception $error ) {
 			$endTime = microtime(true);
 			$this->log($sql,$params,$beginTime,$endTime,$error,'doQuery');
-			throw $e;
+			throw $error;
 		}
 		$endTime = microtime(true);
 		$this->log($sql,$params,$beginTime,$endTime,null,'doQuery');
@@ -72,10 +72,10 @@ implements EarthIT_DBC_SQLRunner, EarthIT_DBC_SQLRunner2
 		$beginTime = microtime(true);
 		try {
 			$res = $this->backingSqlRunner->fetchRows($sql, $params);
-		} catch( Exception $e ) {
+		} catch( Exception $error ) {
 			$endTime = microtime(true);
 			$this->log($sql,$params,$beginTime,$endTime,$error,'fetchRows');
-			throw $e;
+			throw $error;
 		}
 		$endTime = microtime(true);
 		$this->log($sql,$params,$beginTime,$endTime,null,'fetchRows');
