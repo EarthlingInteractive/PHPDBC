@@ -1,6 +1,7 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class EarthIT_DBC_ParamsBuilderTest extends PHPUnit_Framework_TestCase
+class EarthIT_DBC_ParamsBuilderTest extends TestCase
 {
 	public function testHelloWorld() {
 		$pb = new EarthIT_DBC_ParamsBuilder();

@@ -1,6 +1,7 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class EarthIT_DBC_SQLExpressionUtilTest extends PHPUnit_Framework_TestCase
+class EarthIT_DBC_SQLExpressionUtilTest extends TestCase
 {
 	protected function assertSqlEquals($expected, EarthIT_DBC_SQLQueryComponent $expression) {
 		$this->assertEquals($expected, EarthIT_DBC_SQLExpressionUtil::debugSql($expression));

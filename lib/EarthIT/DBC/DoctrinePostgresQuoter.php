@@ -4,7 +4,7 @@ class EarthIT_DBC_DoctrinePostgresQuoter implements EarthIT_DBC_Quoter
 {
 	protected $conn;
 	
-	public function __construct( Doctrine\DBAL\Driver\Connection $conn ) {
+	public function __construct( Doctrine\DBAL\Connection $conn ) {
 		$this->conn = $conn;
 	}
 	

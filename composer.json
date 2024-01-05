@@ -2,12 +2,12 @@
 	"name": "earthit/dbc",
 	"description": "Database access utilities",
 	"require": {
-		"php": ">=5.2.0"
+		"php": ">=8.1"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^3.7",
-		"earthit/php-common": "^1.1.1",
-		"earthit/php-project-utils": "^0.0.12",
+		"phpunit/phpunit": "~10.5.5",
+		"earthit/php-common": "^2.0.1",
+		"earthit/php-project-utils": "^0.2.10",
 		"earthit/schema": "^1.0.1"
 	},
 	"autoload": {

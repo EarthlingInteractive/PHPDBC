@@ -1,6 +1,7 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class EarthIT_DBC_CustomQuoterTest extends PHPUnit_Framework_TestCase
+class EarthIT_DBC_CustomQuoterTest extends TestCase
 {
 	public function testIdentifiersQuoted() {
 		$quoter = new EarthIT_DBC_CustomQuoter(
